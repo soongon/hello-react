@@ -1,19 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function ProductList() {
 
-    const [products, setProducts] = 
-                useState(['아이폰13', '갤럭시', '모니터27']);
+    const [products, setProducts] = useState([]);
 
+    useEffect(() => {
+        buttonClicked();
+    });
+
+    function buttonClicked() {
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then(res => {
+                console.log(res.data);
+                setProducts(res.data);
+            });
+    }
+    
     return (
         <>
             <p>
-                <button>get data</button>
+                <button onClick={buttonClicked}>get data</button>
             </p>
             <ul>
-                <li>{products[0]}</li>
-                <li>{products[1]}</li>
-                <li>{products[2]}</li>
+                {
+                    products.map(item => 
+                        <li key={item.id}>
+                            <p>글번호: {item.id}</p>
+                            <p>{item.title}</p>
+                        </li>
+                    )
+                }
             </ul>
         </>
     );
